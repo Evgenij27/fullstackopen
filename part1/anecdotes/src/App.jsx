@@ -12,7 +12,10 @@ function App() {
     "The only way to go fast, is to go well.",
   ];
 
+  const SIZE = anecdotes.length;
+
   const [selected, setSelected] = useState(0);
+  const [votes, setVotes] = useState(Array(SIZE).fill(0));
 
   const nextInt = (min, max) => {
     const minCeiled = Math.ceil(min);
@@ -20,16 +23,22 @@ function App() {
     return Math.floor(Math.random() * (maxFloored - minCeiled + 1) + minCeiled); // The maximum is inclusive and the minimum is inclusive
   };
 
-  const size = anecdotes.length;
-
   const handleClick = () => {
-    setSelected(nextInt(0, size));
+    setSelected(nextInt(0, SIZE - 1));
+  };
+
+  const handleVote = () => {
+    const copyVotes = [...votes];
+    copyVotes[selected] += 1;
+    setVotes(copyVotes);
   };
 
   return (
     <div>
       <p>{anecdotes[selected]}</p>
+      <p>Has votes: {votes[selected]}</p>
       <button onClick={handleClick}>Next Anecdote</button>
+      <button onClick={handleVote}>Vote</button>
     </div>
   );
 }
