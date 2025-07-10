@@ -48,6 +48,10 @@ const Statistics = ({ props }) => {
   );
 };
 
+const Button = ({ text, onClick }) => {
+  return <button onClick={onClick}>{text}</button>;
+};
+
 const App = () => {
   const [goodRate, setGoodRate] = useState(0);
   const [neutralRate, setNeutralRate] = useState(0);
@@ -69,9 +73,9 @@ const App = () => {
     <div>
       <div>
         <h2>give feedback</h2>
-        <button onClick={handleGoodRate}>good</button>
-        <button onClick={handleNeutralRate}>neutral</button>
-        <button onClick={handleBadRate}>bad</button>
+        <Button text="good" onClick={handleGoodRate} />
+        <Button text="neutral" onClick={handleNeutralRate} />
+        <Button text="bad" onClick={handleBadRate} />
       </div>
       <div>
         <h2>statistics</h2>
