@@ -16,6 +16,7 @@ function App() {
 
   const [selected, setSelected] = useState(0);
   const [votes, setVotes] = useState(Array(SIZE).fill(0));
+  const [pop, setPop] = useState(0);
 
   const nextInt = (min, max) => {
     const minCeiled = Math.ceil(min);
@@ -30,6 +31,9 @@ function App() {
   const handleVote = () => {
     const copyVotes = [...votes];
     copyVotes[selected] += 1;
+    if (copyVotes[selected] > copyVotes[pop]) {
+      setPop(selected);
+    }
     setVotes(copyVotes);
   };
 
@@ -39,6 +43,10 @@ function App() {
       <p>Has votes: {votes[selected]}</p>
       <button onClick={handleClick}>Next Anecdote</button>
       <button onClick={handleVote}>Vote</button>
+      <p>Popular</p>
+      <p>
+        {anecdotes[pop]} with {votes[pop]} votes
+      </p>
     </div>
   );
 }
