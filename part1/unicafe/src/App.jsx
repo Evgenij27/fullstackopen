@@ -1,8 +1,34 @@
 import { useState } from "react";
 
+const StatisticsLine = ({ text, action }) => {
+  const value = action();
+  return (
+    <p>
+      {text} : {value}
+    </p>
+  );
+};
+
 const Statistics = ({ props }) => {
   const [g, n, b] = props;
   const all = g + n + b;
+
+  const display = (v) => {
+    return () => v;
+  };
+
+  const sum = () => {
+    return g + n + b;
+  };
+
+  const average = () => {
+    return (g - b) / (g + b + n);
+  };
+
+  const positive = () => {
+    return (g / (g + n + b)) * 100;
+  };
+
   if (all === 0) {
     return (
       <div>
@@ -12,12 +38,12 @@ const Statistics = ({ props }) => {
   }
   return (
     <div>
-      <p>good: {g} </p>
-      <p>neutral: {n} </p>
-      <p>bad: {b} </p>
-      <p>all: {g + n + b}</p>
-      <p>average: {(g - b) / (g + b + n)}</p>
-      <p>positive: {(g / (g + n + b)) * 100}%</p>
+      <StatisticsLine text="good" action={display(g)} />
+      <StatisticsLine text="neutral" action={display(n)} />
+      <StatisticsLine text="bad" action={display(b)} />
+      <StatisticsLine text="all" action={sum} />
+      <StatisticsLine text="average" action={average} />
+      <StatisticsLine text="positive" action={positive} />
     </div>
   );
 };
