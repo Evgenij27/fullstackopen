@@ -39,10 +39,11 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <div></div>
+      <div>
+        filter: <input onChange={handleSearchQuery} />
+      </div>
       <form onSubmit={handleNewPerson}>
         <div>
-          filter: <input onChange={handleSearchQuery} />
           name: <input value={newName} onChange={handleNewName} />
           phone: <input value={phone} onChange={handlePhone} />
         </div>
