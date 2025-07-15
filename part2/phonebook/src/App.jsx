@@ -3,6 +3,7 @@ import { useState } from "react";
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("");
+  const [phone, setPhone] = useState("");
 
   const handleNewPerson = (event) => {
     event.preventDefault();
@@ -15,13 +16,19 @@ const App = () => {
     const newPerson = {
       id: persons.length,
       name: newName,
+      phone: phone,
     };
     setPersons(persons.concat(newPerson));
     setNewName("");
+    setPhone("");
   };
 
   const handleNewName = (event) => {
     setNewName(event.target.value);
+  };
+
+  const handlePhone = (event) => {
+    setPhone(event.target.value);
   };
 
   return (
@@ -30,13 +37,20 @@ const App = () => {
       <form onSubmit={handleNewPerson}>
         <div>
           name: <input value={newName} onChange={handleNewName} />
+          phone: <input value={phone} onChange={handlePhone} />
         </div>
         <div>
           <button type="submit">Add</button>
         </div>
       </form>
       <h2>Numbers</h2>
-      ...
+      <ul>
+        {persons.map((p) => (
+          <li key={p.id}>
+            {p.name} {p.phone}
+          </li>
+        ))}
+      </ul>
     </div>
   );
 };
