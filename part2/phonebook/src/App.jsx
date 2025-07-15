@@ -4,6 +4,7 @@ const App = () => {
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("");
   const [phone, setPhone] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
 
   const handleNewPerson = (event) => {
     event.preventDefault();
@@ -31,11 +32,17 @@ const App = () => {
     setPhone(event.target.value);
   };
 
+  const handleSearchQuery = (event) => {
+    setSearchQuery(event.target.value);
+  };
+
   return (
     <div>
       <h2>Phonebook</h2>
+      <div></div>
       <form onSubmit={handleNewPerson}>
         <div>
+          filter: <input onChange={handleSearchQuery} />
           name: <input value={newName} onChange={handleNewName} />
           phone: <input value={phone} onChange={handlePhone} />
         </div>
@@ -45,11 +52,19 @@ const App = () => {
       </form>
       <h2>Numbers</h2>
       <ul>
-        {persons.map((p) => (
-          <li key={p.id}>
-            {p.name} {p.phone}
-          </li>
-        ))}
+        {searchQuery === ""
+          ? persons.map((p) => (
+              <li key={p.id}>
+                {p.name} {p.phone}
+              </li>
+            ))
+          : persons
+              .filter((p) => p.name.includes(searchQuery))
+              .map((p) => (
+                <li key={p.id}>
+                  {p.name} {p.phone}
+                </li>
+              ))}
       </ul>
     </div>
   );
