@@ -1,10 +1,28 @@
 import { useState } from "react";
 
-const App = () => {
-  const [persons, setPersons] = useState([]);
+const Filter = ({ setSearchQuery }) => {
+  const handleSearchQuery = (event) => {
+    setSearchQuery(event.target.value);
+  };
+
+  return (
+    <div>
+      Filter: <input onChange={handleSearchQuery} />
+    </div>
+  );
+};
+
+const PersonForm = ({ persons, personsSetter }) => {
   const [newName, setNewName] = useState("");
   const [phone, setPhone] = useState("");
-  const [searchQuery, setSearchQuery] = useState("");
+
+  const handleNewName = (event) => {
+    setNewName(event.target.value);
+  };
+
+  const handlePhone = (event) => {
+    setPhone(event.target.value);
+  };
 
   const handleNewPerson = (event) => {
     event.preventDefault();
@@ -19,54 +37,50 @@ const App = () => {
       name: newName,
       phone: phone,
     };
-    setPersons(persons.concat(newPerson));
+    personsSetter(persons.concat(newPerson));
     setNewName("");
     setPhone("");
   };
 
-  const handleNewName = (event) => {
-    setNewName(event.target.value);
-  };
+  return (
+    <form onSubmit={handleNewPerson}>
+      <div>
+        Name: <input value={newName} onChange={handleNewName} />
+        Phone: <input value={phone} onChange={handlePhone} />
+      </div>
+      <div>
+        <button type="submit">Add</button>
+      </div>
+    </form>
+  );
+};
 
-  const handlePhone = (event) => {
-    setPhone(event.target.value);
-  };
+const FilteredList = ({ persons, query }) => {
+  if (query !== "") {
+    persons = persons.filter((p) => p.name.includes(query));
+  }
+  return (
+    <ul>
+      {persons.map((p) => (
+        <li key={p.id}>
+          {p.name} {p.phone}
+        </li>
+      ))}
+    </ul>
+  );
+};
 
-  const handleSearchQuery = (event) => {
-    setSearchQuery(event.target.value);
-  };
+const App = () => {
+  const [persons, setPersons] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
 
   return (
     <div>
       <h2>Phonebook</h2>
-      <div>
-        filter: <input onChange={handleSearchQuery} />
-      </div>
-      <form onSubmit={handleNewPerson}>
-        <div>
-          name: <input value={newName} onChange={handleNewName} />
-          phone: <input value={phone} onChange={handlePhone} />
-        </div>
-        <div>
-          <button type="submit">Add</button>
-        </div>
-      </form>
+      <Filter setSearchQuery={setSearchQuery} />
+      <PersonForm persons={persons} personsSetter={setPersons} />
       <h2>Numbers</h2>
-      <ul>
-        {searchQuery === ""
-          ? persons.map((p) => (
-              <li key={p.id}>
-                {p.name} {p.phone}
-              </li>
-            ))
-          : persons
-              .filter((p) => p.name.includes(searchQuery))
-              .map((p) => (
-                <li key={p.id}>
-                  {p.name} {p.phone}
-                </li>
-              ))}
-      </ul>
+      <FilteredList persons={persons} query={searchQuery} />
     </div>
   );
 };
