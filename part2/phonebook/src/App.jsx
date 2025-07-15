@@ -6,6 +6,12 @@ const App = () => {
 
   const handleNewPerson = (event) => {
     event.preventDefault();
+
+    if (persons.findIndex((p) => p.name === newName) > -1) {
+      alert(`${newName} is already in the phonebook`);
+      return;
+    }
+
     const newPerson = {
       id: persons.length,
       name: newName,
