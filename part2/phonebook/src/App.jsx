@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
 
 const Filter = ({ setSearchQuery }) => {
   const handleSearchQuery = (event) => {
@@ -8,6 +9,43 @@ const Filter = ({ setSearchQuery }) => {
   return (
     <div>
       Filter: <input onChange={handleSearchQuery} />
+    </div>
+  );
+};
+
+const FilteredList = ({ persons, query }) => {
+  if (query !== "") {
+    persons = persons.filter((p) => p.name.includes(query));
+  }
+  return (
+    <ul>
+      {persons.map((p) => (
+        <li key={p.id}>
+          {p.name} {p.phone}
+        </li>
+      ))}
+    </ul>
+  );
+};
+
+const App = () => {
+  const [persons, setPersons] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  useEffect(() => {
+    console.log("getting data...");
+    axios.get("http://localhost:3001/persons").then((resp) => {
+      setPersons(resp.data);
+    });
+  }, []);
+
+  return (
+    <div>
+      <h2>Phonebook</h2>
+      <Filter setSearchQuery={setSearchQuery} />
+      <PersonForm persons={persons} personsSetter={setPersons} />
+      <h2>Numbers</h2>
+      <FilteredList persons={persons} query={searchQuery} />
     </div>
   );
 };
@@ -52,36 +90,6 @@ const PersonForm = ({ persons, personsSetter }) => {
         <button type="submit">Add</button>
       </div>
     </form>
-  );
-};
-
-const FilteredList = ({ persons, query }) => {
-  if (query !== "") {
-    persons = persons.filter((p) => p.name.includes(query));
-  }
-  return (
-    <ul>
-      {persons.map((p) => (
-        <li key={p.id}>
-          {p.name} {p.phone}
-        </li>
-      ))}
-    </ul>
-  );
-};
-
-const App = () => {
-  const [persons, setPersons] = useState([]);
-  const [searchQuery, setSearchQuery] = useState("");
-
-  return (
-    <div>
-      <h2>Phonebook</h2>
-      <Filter setSearchQuery={setSearchQuery} />
-      <PersonForm persons={persons} personsSetter={setPersons} />
-      <h2>Numbers</h2>
-      <FilteredList persons={persons} query={searchQuery} />
-    </div>
   );
 };
 
