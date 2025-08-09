@@ -13,15 +13,29 @@ const Filter = ({ setSearchQuery }) => {
   );
 };
 
-const FilteredList = ({ persons, query }) => {
+const FilteredList = ({ persons, query, personsSetter }) => {
   if (query !== "") {
     persons = persons.filter((p) => p.name.includes(query));
   }
+
+  const handlePersonDelete = (id) => {
+    if (confirm(`Are you sure you want to delete?`)) {
+      console.log(`Deleting person with id = ${id}`);
+      personService.deletePerson(id).then((resp) => {
+        console.log(resp);
+        if (persons.length >= 1) {
+          personsSetter(persons.filter((p) => p.id !== id));
+        }
+      });
+    }
+  };
+
   return (
     <ul>
       {persons.map((p) => (
         <li key={p.id}>
           {p.name} {p.phone}
+          <button onClick={() => handlePersonDelete(p.id)}>delete</button>
         </li>
       ))}
     </ul>
@@ -43,7 +57,11 @@ const App = () => {
       <Filter setSearchQuery={setSearchQuery} />
       <PersonForm persons={persons} personsSetter={setPersons} />
       <h2>Numbers</h2>
-      <FilteredList persons={persons} query={searchQuery} />
+      <FilteredList
+        persons={persons}
+        query={searchQuery}
+        personsSetter={setPersons}
+      />
     </div>
   );
 };
@@ -69,7 +87,7 @@ const PersonForm = ({ persons, personsSetter }) => {
     }
 
     const newPerson = {
-      id: persons.length,
+      id: persons.length.toString(),
       name: newName,
       phone: phone,
     };
