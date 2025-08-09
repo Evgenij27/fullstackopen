@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
+import personService from "./services/personService";
 
 const Filter = ({ setSearchQuery }) => {
   const handleSearchQuery = (event) => {
@@ -34,9 +34,7 @@ const App = () => {
 
   useEffect(() => {
     console.log("getting data...");
-    axios.get("http://localhost:3001/persons").then((resp) => {
-      setPersons(resp.data);
-    });
+    personService.all().then((initalPersons) => setPersons(initalPersons));
   }, []);
 
   return (
@@ -75,9 +73,12 @@ const PersonForm = ({ persons, personsSetter }) => {
       name: newName,
       phone: phone,
     };
-    personsSetter(persons.concat(newPerson));
-    setNewName("");
-    setPhone("");
+
+    personService.create(newPerson).then((createdPerson) => {
+      personsSetter(persons.concat(createdPerson));
+      setNewName("");
+      setPhone("");
+    });
   };
 
   return (
