@@ -81,8 +81,22 @@ const PersonForm = ({ persons, personsSetter }) => {
   const handleNewPerson = (event) => {
     event.preventDefault();
 
-    if (persons.findIndex((p) => p.name === newName) > -1) {
-      alert(`${newName} is already in the phonebook`);
+    let index = persons.findIndex((p) => p.name === newName);
+    let storedPerson = persons[index];
+    if (index > -1) {
+      if (
+        confirm(
+          `${newName} is already in the phonebook, replace old number with a new one?`,
+        )
+      ) {
+        let changedPerson = { ...storedPerson };
+        changedPerson["phone"] = phone;
+        personService.update(changedPerson).then((updatedPerson) => {
+          personsSetter(
+            persons.map((p) => (p.id === updatedPerson.id ? updatedPerson : p)),
+          );
+        });
+      }
       return;
     }
 
